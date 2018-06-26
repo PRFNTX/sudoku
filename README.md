@@ -1,3 +1,5 @@
+Sudoku by Brent Hughson.
+
 Run Project for Dev:
     1) $ npm install
     2) $ npm start
