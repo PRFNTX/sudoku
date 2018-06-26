@@ -3,7 +3,10 @@ Run Project for Dev:
     2) $ npm start
 
 Build and run
-    1) $ npm run build
+    1) $ npm install
+    2) $ npm run build
+    3) $ npm run serve
+    4) navigate to 'localhost:8080' in your browser
 
 Add new Puzzles: 
     1) open /src/boards/boards.js

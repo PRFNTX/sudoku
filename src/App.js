@@ -41,6 +41,8 @@ class App extends Component {
         this.setState({
             staticSet: staticSet,
             values: newBoard,
+            warn: [],
+            active: [-1, -1],
             start: true,
             gameEnd: false
         });
@@ -50,31 +52,6 @@ class App extends Component {
         this.setState({
             active: [row, col]
         });
-    }
-
-    mapValuesToSquares = () => {
-        const {values, warn, active, staticSet} = this.state;
-        return values.map((row, rNum)=>{
-            return (
-                <div key={`r${rNum}`}className="Row">
-                    {
-                        row.map((val, cNum)=> {
-                            return (
-                                <Square
-                                    key={`${rNum}${cNum}`}
-                                    value={val}
-                                    onClick={()=>this.activateSquare(rNum, cNum)}
-                                    isStatic={staticSet.includes(`${rNum}${cNum}`)}
-                                    isActive={rNum === active[0] && cNum === active[1]}
-                                    pos={[cNum, rNum]}
-                                    isWarn={warn.includes(`${rNum}${cNum}`)}
-                                />
-                            )
-                        })
-                    }
-                </div>
-            )
-        })
     }
 
     changeValue = (val) => {
@@ -93,14 +70,14 @@ class App extends Component {
         if (newValues[row][col].length === 9) {
             newValues[row][col] = []
         }
-        const finalNewWarnings = this.verifySection(row, col, val, newValues)
+        const newWarnings = this.verifySection(row, col, val, newValues)
         let gameEnd = false
-        if (finalNewWarnings.length === 0) {
+        if (newWarnings.length === 0) {
             gameEnd = this.checkGameWin()
         }
         this.setState({
             values: newValues,
-            warn: finalNewWarnings,
+            warn: newWarnings,
             gameEnd: gameEnd
         });
     }
@@ -181,6 +158,31 @@ class App extends Component {
         return warnings
     }
 
+    mapValuesToSquares = () => {
+        const {values, warn, active, staticSet} = this.state;
+        return values.map((row, rNum)=>{
+            return (
+                <div key={`r${rNum}`}className="Row">
+                    {
+                        row.map((val, cNum)=> {
+                            return (
+                                <Square
+                                    key={`${rNum}${cNum}`}
+                                    value={val}
+                                    onClick={()=>this.activateSquare(rNum, cNum)}
+                                    isStatic={staticSet.includes(`${rNum}${cNum}`)}
+                                    isActive={rNum === active[0] && cNum === active[1]}
+                                    pos={[cNum, rNum]}
+                                    isWarn={warn.includes(`${rNum}${cNum}`)}
+                                />
+                            )
+                        })
+                    }
+                </div>
+            )
+        })
+    }
+
     getValueSelectors = () => {
         const {values, active} = this.state;
         const [row, col] = active
@@ -238,34 +240,38 @@ class App extends Component {
     render() {
         if (this.state.start && !this.state.gameEnd) {
             return (
-                <Fragment>
+                <div className="App">
+                    <h1>Sudoku</h1>
                     <div className="container centeredHorz">
                         <div className="board">
                             {this.mapValuesToSquares()}
                         </div>
                         {this.state.active.includes(-1) ||
                             <div className="selector">
+                                <h3>Select Values(s)</h3>
                                 {this.getValueSelectors()}
                             </div>
                         }
                     </div>
                     <button onClick={this.reset}> Reset </button>
-                </Fragment>
+                </div>
             )
         }
         return (
-            <div className="centeredHorz">
+            <div className="centeredHorz App">
+                <h1>Sudoku</h1>
                 {this.state.gameEnd &&
                         <h1> You Win! </h1>
                 }
                 {boards.map((board, i)=>{
                     return (
-                        <button
-                            key={i}
-                            onClick={()=>this.newGame(i)}
-                        >
-                            Start Puzzle {i}
-                        </button>
+                        <div key={i}>
+                            <button
+                                onClick={()=>this.newGame(i)}
+                            >
+                                Start Puzzle {i}
+                            </button>
+                        </div>
                     )
                 })}
             </div>
