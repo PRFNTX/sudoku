@@ -9,6 +9,7 @@ const Square = (props) => {
             className={
                 `sq sq${pos[0] % 3}${pos[1] % 3}
                 ${isActive ? "active" : ""}
+                ${isStatic ? "sqStatic" : ""}
                 ${isWarn ? "warn" : ""}
             `}
             onClick={()=>{
